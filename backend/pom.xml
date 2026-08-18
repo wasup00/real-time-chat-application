@@ -8,7 +8,7 @@
 		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.backend.app</groupId>
+	<groupId>com.chatapp</groupId>
 	<artifactId>chat_app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>chat_app</name>
