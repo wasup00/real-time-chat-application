@@ -1,0 +1,42 @@
+name: Android Version Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'android/app/src/main/**'
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check versionCode and versionName were bumped
+        run: |
+          git show "${{ github.event.pull_request.base.sha }}:android/app/build.gradle.kts" > /tmp/base-build.gradle.kts
+
+          BASE_CODE=$(grep -oP '(?<=versionCode = )\d+' /tmp/base-build.gradle.kts)
+          HEAD_CODE=$(grep -oP '(?<=versionCode = )\d+' android/app/build.gradle.kts)
+          BASE_NAME=$(grep -oP '(?<=versionName = ")[^"]+' /tmp/base-build.gradle.kts)
+          HEAD_NAME=$(grep -oP '(?<=versionName = ")[^"]+' android/app/build.gradle.kts)
+
+          echo "Base versionCode: $BASE_CODE, versionName: $BASE_NAME"
+          echo "Head versionCode: $HEAD_CODE, versionName: $HEAD_NAME"
+
+          FAILED=0
+          if [ "$BASE_CODE" = "$HEAD_CODE" ]; then
+            echo "::error::android/app/src/main/ changed but versionCode was not bumped (still $HEAD_CODE)"
+            FAILED=1
+          fi
+          if [ "$BASE_NAME" = "$HEAD_NAME" ]; then
+            echo "::error::android/app/src/main/ changed but versionName was not bumped (still $HEAD_NAME)"
+            FAILED=1
+          fi
+
+          if [ "$FAILED" = "1" ]; then
+            exit 1
+          fi

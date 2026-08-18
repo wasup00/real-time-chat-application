@@ -1,0 +1,31 @@
+name: Backend Version Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'backend/src/main/**'
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check pom.xml version was bumped
+        run: |
+          git show "${{ github.event.pull_request.base.sha }}:backend/pom.xml" > /tmp/base-pom.xml
+
+          BASE_VERSION=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='version'])" /tmp/base-pom.xml)
+          HEAD_VERSION=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='version'])" backend/pom.xml)
+
+          echo "Base version: $BASE_VERSION"
+          echo "Head version: $HEAD_VERSION"
+
+          if [ "$BASE_VERSION" = "$HEAD_VERSION" ]; then
+            echo "::error::backend/src/main/ changed but backend/pom.xml <version> was not bumped (still $HEAD_VERSION)"
+            exit 1
+          fi
