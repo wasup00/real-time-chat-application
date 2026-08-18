@@ -8,6 +8,7 @@ on:
 
 jobs:
   check-version:
+    name: Backend Version Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
