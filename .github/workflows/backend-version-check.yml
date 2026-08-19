@@ -20,8 +20,8 @@ jobs:
         run: |
           git show "${{ github.event.pull_request.base.sha }}:backend/pom.xml" > /tmp/base-pom.xml
 
-          BASE_VERSION=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='version'])" /tmp/base-pom.xml)
-          HEAD_VERSION=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='version'])" backend/pom.xml)
+          BASE_VERSION=$(grep -A1 '<artifactId>backend</artifactId>' /tmp/base-pom.xml | grep -oP '(?<=<version>)[^<]+')
+          HEAD_VERSION=$(grep -A1 '<artifactId>backend</artifactId>' backend/pom.xml | grep -oP '(?<=<version>)[^<]+')
 
           echo "Base version: $BASE_VERSION"
           echo "Head version: $HEAD_VERSION"
