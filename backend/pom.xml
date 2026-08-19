@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.chatapp</groupId>
 	<artifactId>backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>backend</name>
 	<description>A Java-based real-time chat app with WebSocket technology. Features private/group messaging, authentication, and online status indicators.</description>
 	<properties>
