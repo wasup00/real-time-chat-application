@@ -6,7 +6,7 @@ A Java-based real-time chat app with WebSocket technology. Features private/grou
 
 This is a monorepo with two independent projects:
 
-- `backend/` — Spring Boot (Java 17, Maven) WebSocket server.
+- `backend/` — Spring Boot (Java 21, Maven) WebSocket server.
 - `android/` — Android client app (Kotlin).
 
 ## Running the backend
